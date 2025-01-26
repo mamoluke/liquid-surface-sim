@@ -8,7 +8,6 @@
     body {
       margin: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
     }
     canvas {
       display: block;
@@ -20,41 +19,38 @@
   <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/objects/Water.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.js"></script>
   <script>
-    // シーン、カメラ、レンダラーの初期化
+    // Three.js 基本セットアップ
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // 環境光と方向光の追加
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    // 環境光
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(10, 10, 10);
+    scene.add(light);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(5, 10, 7.5);
-    scene.add(directionalLight);
-
-    // 水面の作成
+    // 水面を作成
     const waterGeometry = new THREE.PlaneGeometry(100, 100);
     const water = new THREE.Water(waterGeometry, {
       color: 0x001e0f,
-      scale: 1,
+      scale: 2,
       flowDirection: new THREE.Vector2(1, 1),
-      textureWidth: 512,
-      textureHeight: 512
+      textureWidth: 1024,
+      textureHeight: 1024
     });
     water.rotation.x = -Math.PI / 2;
     scene.add(water);
 
-    // カメラの位置設定
-    camera.position.set(0, 10, 20);
+    // カメラ設定
+    camera.position.set(0, 10, 30);
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     // アニメーションループ
     function animate() {
       requestAnimationFrame(animate);
-      water.material.uniforms['time'].value += 0.05; // 水面のアニメーション
+      water.material.uniforms['time'].value += 0.03;
       controls.update();
       renderer.render(scene, camera);
     }
